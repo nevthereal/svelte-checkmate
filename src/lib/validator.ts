@@ -1,22 +1,23 @@
-import type { ZodType, ZodError } from 'zod';
-import { z } from 'zod';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
 
-export type ValidatorResult<T extends ZodType> =
-	| { success: true; data: z.infer<T> }
-	| { success: false; errors: ReturnType<ZodError['flatten']>['fieldErrors'] };
+// import type { ZodTypeZodError } from 'zod';
 
-export const validator = <T extends ZodType>({
+export type ValidatorResult<T extends StandardSchemaV1> =
+	| { success: true; data: StandardSchemaV1.InferOutput<T> }
+	| { success: false; errors: StandardSchemaV1.InferOutput<T> };
+
+export const validator = async <T extends StandardSchemaV1>({
 	schema,
 	formData
 }: {
 	schema: T;
 	formData: FormData;
-}): ValidatorResult<T> => {
-	const result = schema.safeParse(Object.fromEntries(formData.entries()));
+}): Promise<ValidatorResult<T>> => {
+	const result = await schema['~standard'].validate(Object.fromEntries(formData.entries()));
 
-	if (!result.success) {
-		return { success: false, errors: z.flattenError(result.error) };
+	if (result.issues) {
+		return { success: false, errors: result.issues };
 	}
 
-	return { success: true, data: result.data };
+	return { success: true, data: result.value };
 };

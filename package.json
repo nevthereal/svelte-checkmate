@@ -30,7 +30,8 @@
 		}
 	},
 	"peerDependencies": {
-		"svelte": "^5.0.0"
+		"svelte": "^5.0.0",
+		"zod": "^3.25.0 || ^4.0.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
