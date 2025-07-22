@@ -1,58 +1,36 @@
-# Svelte library
+# svelte-checkmate
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+a standard-schema validation library for your sveltekit remote functions, specifically the form function
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
+## Installation
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+pnpm add svelte-checkmate
 ```
 
-## Developing
+## Usage
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+```ts
+import { validator } from 'svelte-checkmate';
+import { form } from '$app/server';
 
-```bash
-npm run dev
+export const login = form(async (formData) => {
+	const newUser = await validator({
+		schema: yourStandardSchema, // you can use zod, arktype or any standard schema supported validation library
+		formData
+	});
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+	if (!newUser.success) return { success: false, error: newUser.errors };
+
+	db.insert(newUser.data);
+
+	return { success: true };
+});
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+## TODO
 
-## Building
+This library is nowhere to complete, I built it for my own use cases. But I plan to incorporate following things:
 
-To build your library:
-
-```bash
-npm run package
-```
-
-To create a production version of your showcase app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```bash
-npm publish
-```
+- [ ] Better error handling
+- [ ] Maybe a `<Form />` component
