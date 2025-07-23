@@ -33,4 +33,6 @@ export const login = form(async (formData) => {
 This library is nowhere to complete, I built it for my own use cases. But I plan to incorporate following things:
 
 - [ ] Better error handling
-- [ ] Maybe a `<Form />` component
+- [ ] A `<Form />` component
+  - [ ] Pass additional data to the form
+  - [ ] Typesafety on the client for error & reult handling
